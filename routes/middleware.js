@@ -1,5 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
+const secretkey = process.env.SECRET_KEY;
 
 function userLoggedIn(req, res, next){
     // Check if user session exists
@@ -11,4 +14,21 @@ function userLoggedIn(req, res, next){
     }
   };
 
-module.exports={userLoggedIn};
+function verifyToken(req,res,next){
+    
+  const token = req.cookies.token;
+  if (!token) {
+    res.redirect('/login');
+  }
+
+  try{
+
+    const decoded = jwt.verify(token,secretkey);
+    req.user = decoded;
+    next();
+  } catch(err){
+    res.redirect('/login');
+  }
+}
+
+module.exports={verifyToken};

@@ -4,6 +4,11 @@ const nocache = require('nocache');
 var connectDB = require('./mongo');
 var User = require('../models/usermodel')
 var bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
+const secretkey = process.env.SECRET_KEY;
 
 // LOGIN
 router.post('/login', async(req,res)=>{
@@ -16,8 +21,12 @@ router.post('/login', async(req,res)=>{
 
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (isMatch) {
-        req.session.user = req.body.email;
+
+        const token = jwt.sign({ id : user._id, username : user.username },
+                                  secretkey, {expiresIn: '1hr'});
+
         console.log("Login Success");
+        res.cookie('token', token, { httpOnly: true, secure: true }); // Optional 'secure: true' for HTTPS
         res.redirect('/');
       } else {
         res.render('login',{err : "Incorrect Password"});

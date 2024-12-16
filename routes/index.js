@@ -1,5 +1,5 @@
 var express = require('express');
-var isLoggedIn = require('./middleware').userLoggedIn;
+var isLoggedIn = require('./middleware').verifyToken;
 var connectDB = require('./mongo');
 const productSchema = require('../models/productmodel');
 
