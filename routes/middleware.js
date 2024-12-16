@@ -18,7 +18,7 @@ function verifyToken(req,res,next){
     
   const token = req.cookies.token;
   if (!token) {
-    res.redirect('/login');
+    res.render('login',{ loggedIn : false });
   }
 
   try{
@@ -27,7 +27,7 @@ function verifyToken(req,res,next){
     req.user = decoded;
     next();
   } catch(err){
-    res.redirect('/login');
+    res.render('login',{ loggedIn : false });
   }
 }
 

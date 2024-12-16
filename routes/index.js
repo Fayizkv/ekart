@@ -12,7 +12,7 @@ router.get('/', isLoggedIn, async function(req, res, next) {
   
   const products = await productSchema.find();
   
-  res.render('index', { products });
+  res.render('index', { products, loggedIn : true });
 });
 
 router.get('/signup', (req,res)=>{
