@@ -1,11 +1,18 @@
 var express = require('express');
 var isLoggedIn = require('./middleware').userLoggedIn;
+var connectDB = require('./mongo');
+const productSchema = require('../models/productmodel');
 
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', isLoggedIn, function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', isLoggedIn, async function(req, res, next) {
+  
+  await connectDB();
+  
+  const products = await productSchema.find();
+  
+  res.render('index', { products });
 });
 
 router.get('/signup', (req,res)=>{

@@ -32,6 +32,40 @@ const userSchema = new mongoose.Schema({
     type: String,
     match: [/^\d{10,15}$/, 'Please use a valid phone number'], //phone validation
   },
+  favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId, // References a Product ID
+      ref: 'Product', // Reference to the Product model
+    },
+  ],
+  cart: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId, // References a Product ID
+        ref: 'Product', // Reference to the Product model
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        default: 1, // Default quantity is 1
+        min: 1,
+      },
+    },
+  ],
+  orders: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId, // References a Product ID
+        ref: 'Product', // Reference to the Product model
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        default: 1, // Default quantity is 1
+        min: 1,
+      },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

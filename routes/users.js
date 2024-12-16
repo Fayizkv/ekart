@@ -16,9 +16,9 @@ router.post('/login', async(req,res)=>{
 
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (isMatch) {
-        req.session.user = req.body.username;
+        req.session.user = req.body.email;
         console.log("Login Success");
-        res.render('index');
+        res.redirect('/');
       } else {
         res.render('login',{err : "Incorrect Password"});
       }
