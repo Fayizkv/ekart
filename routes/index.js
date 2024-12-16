@@ -1,8 +1,10 @@
 var express = require('express');
+var isLoggedIn = require('./middleware').userLoggedIn;
+
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', isLoggedIn, function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 

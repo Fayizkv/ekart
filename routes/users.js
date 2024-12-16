@@ -1,13 +1,11 @@
 var express = require('express');
 var router = express.Router();
 const nocache = require('nocache');
-
-/* GET users listing. */
-
 var connectDB = require('./mongo');
 var User = require('../models/usermodel')
 var bcrypt = require('bcrypt');
 
+// LOGIN
 router.post('/login', async(req,res)=>{
   try {
     await connectDB();
@@ -15,20 +13,17 @@ router.post('/login', async(req,res)=>{
     let user = await User.findOne({ email: req.body.email });
     
     if (user) {
-      console.log("User exists");
 
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (isMatch) {
         req.session.user = req.body.username;
         console.log("Login Success");
-        return res.status(200).send('Login successful'); 
+        res.render('index');
       } else {
-        console.log("Password mismatch");
-        return res.status(401).send('Invalid credentials');
+        res.render('login',{err : "Incorrect Password"});
       }
     } else {
-      console.log("User does not exist");
-      return res.status(404).send('User not found');
+      res.render('login',{err : "Invalid Email"});
     }
   } catch (err) {
     console.log(err);
@@ -36,6 +31,9 @@ router.post('/login', async(req,res)=>{
   }
 
 })
+
+
+// SIGNUP
 router.post('/signup', async (req, res) => {
   
   await connectDB();
@@ -60,13 +58,14 @@ router.post('/signup', async (req, res) => {
   
       // Save the new user to the database
       await user.save();
-      console.log('User saved:', user);
-      res.status(201).send('User registered successfully');
+      res.redirect('/login');
       
     } catch (err) {
       console.log(err);
       res.status(500).send('Server error');
     }
+
+    
 });
 
 module.exports = router;
