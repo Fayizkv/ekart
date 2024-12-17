@@ -20,7 +20,7 @@
                     <div class="mt-auto">
                         <div class="d-flex justify-content-around gap-2">
                             <!-- Favorite Button -->
-                            <form action="/products/favorite" method="POST" style="margin: 0;">
+                            <form action="/products/addfavorite" method="POST" style="margin: 0;">
                                 <input type="hidden" name="productId" value="{{this._id}}">
                                 <button type="submit" class="btn btn-outline-danger btn-sm">
                                     ❤️ Favorite
@@ -28,7 +28,7 @@
                             </form>
 
                             <!-- Add to Cart Button -->
-                            <form action="/products/cart" method="POST" style="margin: 0;">
+                            <form action="/products/addcart" method="POST" style="margin: 0;">
                                 <input type="hidden" name="productId" value="{{this._id}}">
                                 <button type="submit" class="btn btn-outline-success btn-sm">
                                     Add to Cart

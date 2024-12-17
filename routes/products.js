@@ -5,11 +5,17 @@ var User = require('../models/usermodel');
 const products = require('../models/productmodel');
 var isLoggedIn = require('./middleware').verifyToken;
 
-router.post('/favorite', isLoggedIn, async (req, res) => {
+
+//FAVORITES::
+
+router.get('/favorties', isLoggedIn, async(req,res)=>{
+
+    
+})
+//ADD TO FAV
+router.post('/addFavorite', isLoggedIn, async (req, res) => {
 
     await connectDB();
-    console.log(req.body.productId);
-    console.log(req.user.id);
 
     const user = await User.findById(req.user.id);
 
@@ -34,4 +40,22 @@ router.post('/favorite', isLoggedIn, async (req, res) => {
     
 });
 
+//ADD TO CART
+router.post('/addcart', isLoggedIn, async (req, res) => {
+
+    await connectDB();
+
+    const user = await User.findById(req.user.id);
+
+    if (!user.cart) {
+        user.cart = [];
+      }
+    const isOnCart = await user.cart.includes(req.body.productId);
+
+    if (!isOnCart) {
+        await user.cart.push(req.body.productId);
+        console.log("Product added to cart succesfully");
+        await user.save();
+    }
+});
 module.exports = router;
