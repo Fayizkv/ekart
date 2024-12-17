@@ -87,4 +87,21 @@ router.post('/addcart', isLoggedIn, async (req, res) => {
     res.redirect('/');
     await user.save();
 });
+
+//remove from cart
+
+router.get('/removefromcart/:productId', isLoggedIn, async(req,res)=>{
+
+    const productId = req.params.productId;
+
+    const user = await User.findById(req.user.id);
+    user.cart = user.cart.filter(item => item.product.toString() !== productId);
+
+    await user.save();
+
+    console.log("Product removed from cart");
+    res.redirect('/products/cart');
+
+
+});
 module.exports = router;
