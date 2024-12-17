@@ -10,6 +10,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 const secretkey = process.env.SECRET_KEY;
 
+//LOGIN 
+router.get('/login', (req,res)=>{
+  res.render('login');
+});
+
 // LOGIN
 router.post('/login', async(req,res)=>{
   try {
@@ -39,14 +44,14 @@ router.post('/login', async(req,res)=>{
     return res.status(500).send('Server error');
   }
 
-})
+});
 
 // LOGOUT 
 router.get('/logout', (req,res)=>{
 
   res.clearCookie('token');
   res.redirect('/');
-})
+});
 
 // SIGNUP
 router.post('/signup', async (req, res) => {
