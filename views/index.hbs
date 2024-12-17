@@ -1,5 +1,9 @@
 <div class="container my-5">
+    {{#if favorites}}
+    <h1 class="text-center mb-4">Favorites</h1>
+    {{else}}
     <h1 class="text-center mb-4">Our Featured Products</h1>
+    {{/if}}
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {{#each products}}
         <div class="col">

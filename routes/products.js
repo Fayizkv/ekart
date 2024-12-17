@@ -6,12 +6,19 @@ const products = require('../models/productmodel');
 var isLoggedIn = require('./middleware').verifyToken;
 
 
-//FAVORITES::
+//favorites::
 
-router.get('/favorties', isLoggedIn, async(req,res)=>{
+router.get('/favorites', isLoggedIn, async(req,res)=>{
 
-    
-})
+    // res.render('favorites');
+    await connectDB();
+
+    const user = await User.findById(req.user.id).populate('favorites');
+    const products = await user.favorites;
+
+    res.render('index', { products, favorites : true, loggedIn : true });
+
+});
 //ADD TO FAV
 router.post('/addFavorite', isLoggedIn, async (req, res) => {
 
