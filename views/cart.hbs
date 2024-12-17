@@ -1,10 +1,59 @@
-<h1>Your Cart</h1>
+<h1 class="text-center my-5">Your Cart</h1>
 
-{{#each cartItems}}
-  <div class="cart-item">
-    <img src="{{this.product.image}}" alt="{{this.product.productname}}" style="width: 100px;">
-    <h5>{{this.product.productname}}</h5>
-    <p>Price: ${{this.product.prize}}</p>
-    <p>Quantity: {{this.quantity}}</p>
+<div class="container">
+  <div class="row">
+    {{#each cartItems}}
+    <div class="col-md-4 col-sm-6 mb-4">
+      <div class="card">
+        <img src="{{this.product.image}}" alt="{{this.product.productname}}" class="card-img-top" style="height: 200px; object-fit: cover;">
+        <div class="card-body">
+          <h5 class="card-title">{{this.product.productname}}</h5>
+          <p class="card-text">Price: ${{this.product.prize}}</p>
+          <p class="card-text">Quantity: {{this.quantity}}</p>
+          <a href="/removeFromCart/{{this.product._id}}" class="btn btn-danger">Remove</a>
+        </div>
+      </div>
+    </div>
+    {{/each}}
   </div>
-{{/each}}
+
+  <div class="row mt-4">
+    <div class="col text-right">
+      <a href="/checkout" class="btn btn-success">Proceed to Checkout</a>
+    </div>
+  </div>
+</div>
+
+<!-- Optional: Add some custom styling for better visual appeal -->
+<style>
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  .card-img-top {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .cart-item {
+    padding: 1rem;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .cart-item img {
+    max-width: 100%;
+    border-radius: 5px;
+  }
+</style>

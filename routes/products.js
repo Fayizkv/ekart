@@ -27,7 +27,7 @@ router.get('/cart', isLoggedIn, async(req,res)=>{
     const user = await User.findById(req.user.id).populate('cart.product');
     const cartItems = await user.cart;
 
-    
+
     res.render('cart', { cartItems, loggedIn : true});
 
 });
@@ -58,7 +58,7 @@ router.post('/addFavorite', isLoggedIn, async (req, res) => {
         console.log("Product added to favorites succesfully");
         await user.save();
     }
-    
+    res.redirect('/');
 });
 
 //ADD TO CART
@@ -84,7 +84,7 @@ router.post('/addcart', isLoggedIn, async (req, res) => {
         user.cart.push({ product: productId, quantity });
         console.log("Product added to cart successfully");
     }
-
+    res.redirect('/');
     await user.save();
 });
 module.exports = router;
