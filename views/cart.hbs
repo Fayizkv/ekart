@@ -1,0 +1,10 @@
+<h1>Your Cart</h1>
+
+{{#each cartItems}}
+  <div class="cart-item">
+    <img src="{{this.product.image}}" alt="{{this.product.productname}}" style="width: 100px;">
+    <h5>{{this.product.productname}}</h5>
+    <p>Price: ${{this.product.prize}}</p>
+    <p>Quantity: {{this.quantity}}</p>
+  </div>
+{{/each}}

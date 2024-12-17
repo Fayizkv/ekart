@@ -10,7 +10,6 @@ var isLoggedIn = require('./middleware').verifyToken;
 
 router.get('/favorites', isLoggedIn, async(req,res)=>{
 
-    // res.render('favorites');
     await connectDB();
 
     const user = await User.findById(req.user.id).populate('favorites');
@@ -19,6 +18,21 @@ router.get('/favorites', isLoggedIn, async(req,res)=>{
     res.render('index', { products, favorites : true, loggedIn : true });
 
 });
+
+//cart 
+router.get('/cart', isLoggedIn, async(req,res)=>{
+
+    await connectDB();
+
+    const user = await User.findById(req.user.id).populate('cart.product');
+    const cartItems = await user.cart;
+
+    
+    res.render('cart', { cartItems, loggedIn : true});
+
+});
+
+
 //ADD TO FAV
 router.post('/addFavorite', isLoggedIn, async (req, res) => {
 
@@ -53,16 +67,24 @@ router.post('/addcart', isLoggedIn, async (req, res) => {
     await connectDB();
 
     const user = await User.findById(req.user.id);
+    const productId = req.body.productId;
+    const quantity = req.body.quantity || 1;
 
     if (!user.cart) {
         user.cart = [];
-      }
-    const isOnCart = await user.cart.includes(req.body.productId);
+      };
 
-    if (!isOnCart) {
-        await user.cart.push(req.body.productId);
-        console.log("Product added to cart succesfully");
-        await user.save();
+      const existingCartItem = user.cart.find(item => item.product && item.product.toString() === productId);
+
+    if (existingCartItem) {
+      // If product exists, update the quantity
+      existingCartItem.quantity += quantity;
+      console.log("Product quantity updated in cart");
+    } else{
+        user.cart.push({ product: productId, quantity });
+        console.log("Product added to cart successfully");
     }
+
+    await user.save();
 });
 module.exports = router;
