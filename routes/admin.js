@@ -67,5 +67,26 @@ router.post('/addproduct', async(req,res)=>{
         res.redirect('/admin/addproduct');
 });
 //deleteproduct
+
+
+//edit page
+router.get('/edit/:id', async (req,res)=>{
+
+    await connectDB();
+
+    const e_product = await product.findById(req.params.id);
+    res.render('productedit', { e_product }); 
+});
+
+
+//edit product 
+router.post('/edit/:id', async(req,res)=>{
+
+    await product.findByIdAndUpdate( req.params.id, req.body, { new : true });
+    
+    res.redirect('/admin/products');
+});
+
+
 // router.get('')
 module.exports = router;
