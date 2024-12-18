@@ -6,8 +6,13 @@ const products = require('../models/productmodel');
 var isLoggedIn = require('./middleware').verifyToken;
 
 
+//view product details
+router.get('/:id', async(req,res)=>{
+    await connectDB();
+    const product = await products.findById(req.params.id);
+    res.render('product', { product });
+})
 //favorites::
-
 router.get('/favorites', async(req,res)=>{
 
     await connectDB();

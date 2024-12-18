@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{product.productname}} - Product Details</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>{{product.productname}}</h1>
+            <a href="/" class="btn btn-primary">Back to Products</a>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{product.image}}" alt="{{product.productname}}" class="img-fluid" />
+            </div>
+            <div class="col-md-6">
+                <h2>Price: ${{product.prize}}</h2>
+                <p><strong>Category:</strong> {{product.category}}</p>
+                <p><strong>Subcategory:</strong> {{product.subcategory}}</p>
+                <p><strong>Description:</strong> {{product.description}}</p>
+                <p><strong>Brand:</strong> {{product.brandname}}</p>
+                <p>
+                    <strong>Seller:</strong> 
+                    {{#if product.seller}}
+                        {{product.seller}}
+                    {{else}}
+                        Not Available
+                    {{/if}}
+                </p>
+                <form action="/cart/add" method="POST">
+                    <input type="hidden" name="productId" value="{{product._id}}">
+                    <button type="submit" class="btn btn-success">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (optional, for interactivity) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
