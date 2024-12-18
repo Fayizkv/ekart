@@ -66,8 +66,14 @@ router.post('/addproduct', async(req,res)=>{
 
         res.redirect('/admin/addproduct');
 });
-//deleteproduct
 
+//deleteproduct
+router.post('/delete/:id', async(req,res)=>{
+
+    await connectDB();
+    await product.deleteOne({ _id : req.params.id });
+    res.redirect('/admin/products');
+})
 
 //edit page
 router.get('/edit/:id', async (req,res)=>{
@@ -88,5 +94,4 @@ router.post('/edit/:id', async(req,res)=>{
 });
 
 
-// router.get('')
 module.exports = router;
