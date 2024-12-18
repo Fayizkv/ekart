@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var dotenv = require('dotenv');
 
 var product = require('../models/productmodel');
 var User = require('../models/usermodel');
@@ -12,7 +13,28 @@ router.get('/', (req,res)=>{
 
 
 //admin Login
+router.get('/login', (req,res)=>{
+    res.render('login', {admin : true} );
+});
 
+router.post('/login', (req,res)=>{
+    console.log("Hello World");
+    dotenv.config();
+
+    if ( req.body.email == process.env.ADMIN_EMAIL ){
+        if ( req.body.password == process.env.ADMIN_PASSWORD){
+            res.redirect("/admin/");
+            req.session.user = req.body.email;
+        }
+        else {
+            res.render('login', { admin : true , err : "Password Incorrect"});
+        }
+    }
+    else{
+        res.render('login', { admin : true, err : "Invalid Admin"});
+    }
+
+});
 //admin logout
 
 //admin product page

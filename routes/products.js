@@ -8,7 +8,7 @@ var isLoggedIn = require('./middleware').verifyToken;
 
 //favorites::
 
-router.get('/favorites', isLoggedIn, async(req,res)=>{
+router.get('/favorites', async(req,res)=>{
 
     await connectDB();
 
@@ -20,7 +20,7 @@ router.get('/favorites', isLoggedIn, async(req,res)=>{
 });
 
 //cart 
-router.get('/cart', isLoggedIn, async(req,res)=>{
+router.get('/cart', async(req,res)=>{
 
     await connectDB();
 
@@ -34,7 +34,7 @@ router.get('/cart', isLoggedIn, async(req,res)=>{
 
 
 //ADD TO FAV
-router.post('/addFavorite', isLoggedIn, async (req, res) => {
+router.post('/addFavorite', async (req, res) => {
 
     await connectDB();
 
@@ -62,7 +62,7 @@ router.post('/addFavorite', isLoggedIn, async (req, res) => {
 });
 
 //ADD TO CART
-router.post('/addcart', isLoggedIn, async (req, res) => {
+router.post('/addcart', async (req, res) => {
 
     await connectDB();
 
@@ -90,7 +90,7 @@ router.post('/addcart', isLoggedIn, async (req, res) => {
 
 //remove from cart
 
-router.get('/removefromcart/:productId', isLoggedIn, async(req,res)=>{
+router.get('/removefromcart/:productId', async(req,res)=>{
 
     const productId = req.params.productId;
 

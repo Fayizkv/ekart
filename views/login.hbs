@@ -1,7 +1,11 @@
 
 <div class="container mt-5">
   <h2 class="text-center">Login</h2>
+  {{#if admin}}
+  <form action="/admin/login" method="POST">
+  {{else}}
   <form action="/users/login" method="POST">
+  {{/if}}
     <div class="mb-3">
     {{#if err}}
     <div class="alert alert-danger">{{err}}</div>

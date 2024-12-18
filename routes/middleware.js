@@ -4,13 +4,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 const secretkey = process.env.SECRET_KEY;
 
-function userLoggedIn(req, res, next){
-    // Check if user session exists
+function adminLoggedIn(req, res, next){
     if (req.session.user) {
-      return next();  // Continue to the next middleware or route handler
+      return next(); 
     } else {
-      // If user is not logged in, redirect to login page
-      res.redirect('/login');
+      res.render('login', { admin : true });
     }
   };
 
@@ -31,4 +29,4 @@ function verifyToken(req,res,next){
   }
 }
 
-module.exports={verifyToken};
+module.exports={verifyToken, adminLoggedIn};
