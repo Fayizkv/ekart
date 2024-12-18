@@ -8,7 +8,7 @@ var connectDB = require('./mongo')
 
 //admin page 
 router.get('/', (req,res)=>{
-    res.send("Admin Page");
+    res.render('admin');
 });
 
 
@@ -17,24 +17,6 @@ router.get('/login', (req,res)=>{
     res.render('login', {admin : true} );
 });
 
-router.post('/login', (req,res)=>{
-    console.log("Hello World");
-    dotenv.config();
-
-    if ( req.body.email == process.env.ADMIN_EMAIL ){
-        if ( req.body.password == process.env.ADMIN_PASSWORD){
-            res.redirect("/admin/");
-            req.session.user = req.body.email;
-        }
-        else {
-            res.render('login', { admin : true , err : "Password Incorrect"});
-        }
-    }
-    else{
-        res.render('login', { admin : true, err : "Invalid Admin"});
-    }
-
-});
 //admin logout
 
 //admin product page

@@ -5,7 +5,7 @@ dotenv.config();
 const secretkey = process.env.SECRET_KEY;
 
 function adminLoggedIn(req, res, next){
-    if (req.session.user) {
+    if (req.session.email) {
       return next(); 
     } else {
       res.render('login', { admin : true });
