@@ -3,22 +3,25 @@ var router = express.Router();
 var connectDB = require('./mongo');
 var User = require('../models/usermodel');
 const products = require('../models/productmodel');
-var isLoggedIn = require('./middleware').verifyToken;
 
 
-//view product details
-router.get('/:id', async(req,res)=>{
+
+// view product details
+router.get('/view/:id', async(req,res)=>{
     await connectDB();
-    const product = await products.findById(req.params.id);
-    res.render('product', { product });
-})
+    var product = await products.findById(req.params.id);
+    res.render('product', { product, loggedIn : true });
+});
+
 //favorites::
 router.get('/favorites', async(req,res)=>{
 
     await connectDB();
-
+    console.log("hello");
     const user = await User.findById(req.user.id).populate('favorites');
+    // console.log("Hello");
     const products = await user.favorites;
+    // console.log(products);
 
     res.render('index', { products, favorites : true, loggedIn : true });
 
@@ -39,7 +42,7 @@ router.get('/cart', async(req,res)=>{
 
 
 //ADD TO FAV
-router.post('/addFavorite', async (req, res) => {
+router.post('/addfavorite', async (req, res) => {
 
     await connectDB();
 
