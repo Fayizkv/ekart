@@ -22,8 +22,6 @@ router.get('/login', (req,res)=>{
 //admin product page
 router.get('/products', async (req,res)=>{
 
-    await connectDB();
-
     var products = await product.find();
 
     res.render('adminproducts', { products });
@@ -31,8 +29,6 @@ router.get('/products', async (req,res)=>{
 
 //admin user page
 router.get('/users', async(req,res)=>{
-
-    await connectDB();
 
     var users = await User.find();
     console.log(users);
@@ -46,8 +42,6 @@ router.get('/addproduct',(req,res)=>{
 
 //add product
 router.post('/addproduct', async(req,res)=>{
-
-    await connectDB();
 
     const newProduct = await new product({
         productname: req.body.productname,
@@ -70,15 +64,12 @@ router.post('/addproduct', async(req,res)=>{
 //deleteproduct
 router.post('/delete/:id', async(req,res)=>{
 
-    await connectDB();
     await product.deleteOne({ _id : req.params.id });
     res.redirect('/admin/products');
 })
 
 //edit page
 router.get('/edit/:id', async (req,res)=>{
-
-    await connectDB();
 
     const e_product = await product.findById(req.params.id);
     res.render('productedit', { e_product }); 

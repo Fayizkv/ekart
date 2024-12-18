@@ -1,18 +1,20 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const connectDB = require('./mongo');
 
 dotenv.config();
 const secretkey = process.env.SECRET_KEY;
 
-function adminLoggedIn(req, res, next){
+async function adminLoggedIn(req, res, next){
     if (req.session.email) {
+      await connectDB();
       return next(); 
     } else {
       res.render('login', { admin : true });
     }
   };
 
-function verifyToken(req,res,next){
+async function verifyToken(req,res,next){
     
   const token = req.cookies.token;
   if (!token) {
@@ -23,6 +25,7 @@ function verifyToken(req,res,next){
 
     const decoded = jwt.verify(token,secretkey);
     req.user = decoded;
+    await connectDB();
     next();
   } catch(err){
     res.render('login',{ loggedIn : false });

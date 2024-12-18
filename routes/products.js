@@ -1,14 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var connectDB = require('./mongo');
 var User = require('../models/usermodel');
 const products = require('../models/productmodel');
+const Order = require('../models/orders');
 
 
 
 // view product details
 router.get('/view/:id', async(req,res)=>{
-    await connectDB();
     var product = await products.findById(req.params.id);
     res.render('product', { product, loggedIn : true });
 });
@@ -16,12 +15,8 @@ router.get('/view/:id', async(req,res)=>{
 //favorites::
 router.get('/favorites', async(req,res)=>{
 
-    await connectDB();
-    console.log("hello");
     const user = await User.findById(req.user.id).populate('favorites');
-    // console.log("Hello");
     const products = await user.favorites;
-    // console.log(products);
 
     res.render('index', { products, favorites : true, loggedIn : true });
 
@@ -29,8 +24,6 @@ router.get('/favorites', async(req,res)=>{
 
 //cart 
 router.get('/cart', async(req,res)=>{
-
-    await connectDB();
 
     const user = await User.findById(req.user.id).populate('cart.product');
     const cartItems = await user.cart;
@@ -41,10 +34,8 @@ router.get('/cart', async(req,res)=>{
 });
 
 
-//ADD TO FAV
+//Add or remove from fav
 router.post('/addfavorite', async (req, res) => {
-
-    await connectDB();
 
     const user = await User.findById(req.user.id);
 
@@ -72,8 +63,6 @@ router.post('/addfavorite', async (req, res) => {
 //ADD TO CART
 router.post('/addcart', async (req, res) => {
 
-    await connectDB();
-
     const user = await User.findById(req.user.id);
     const productId = req.body.productId;
     const quantity = req.body.quantity || 1;
@@ -97,7 +86,6 @@ router.post('/addcart', async (req, res) => {
 });
 
 //remove from cart
-
 router.get('/removefromcart/:productId', async(req,res)=>{
 
     const productId = req.params.productId;
@@ -112,4 +100,40 @@ router.get('/removefromcart/:productId', async(req,res)=>{
 
 
 });
+
+//buy 
+router.post('/buy', async (req,res)=>{
+
+    const product = await products.findById(req.body.productId);
+    res.render('buypage',{ product });
+});
+
+router.post('/purchase', async (req,res)=>{
+
+    const { productId, quantity, fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod } = req.body;
+
+    const product = await products.findById(req.body.productId);
+
+    if (product.quantity < quantity) {
+        return res.status(400).send("Not enough stock available.");
+    }
+
+    product.quantity -= quantity ;
+    await product.save();
+
+    const totalAmount = product.prize * req.body.quantity;
+
+    const newOrder = new Order({
+        user: req.user.id,
+        products: [{ product: productId, quantity: quantity, price: product.prize }],
+        totalAmount,
+        shippingAddress: { fullName, addressLine1, addressLine2, city, state, postalCode, country },
+        paymentDetails: { method: paymentMethod, paymentStatus: 'Pending' }
+    });
+
+    await newOrder.save();
+
+    res.render('ordersuccess');
+});
+
 module.exports = router;
