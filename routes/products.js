@@ -133,7 +133,26 @@ router.post('/purchase', async (req,res)=>{
 
     await newOrder.save();
 
+    const user = await User.findById(req.user.id);
+    user.orders.push(newOrder._id);
+    user.save();
+
+
     res.render('ordersuccess');
 });
 
+router.get('/orders', async(req, res)=>{
+
+    var userOrders = await User.findById(req.user.id).populate({
+        path: 'orders',
+        populate: {
+          path: 'products.product', // Populate product details
+          model: 'Product',
+        },
+      });
+
+    var orders = userOrders.orders;
+
+    res.render('userorders', { orders });
+});
 module.exports = router;

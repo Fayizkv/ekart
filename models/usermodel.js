@@ -54,16 +54,8 @@ const userSchema = new mongoose.Schema({
   ],
   orders: [
     {
-      product: {
-        type: mongoose.Schema.Types.ObjectId, // References a Product ID
-        ref: 'Product', // Reference to the Product model
-      },
-      quantity: {
-        type: Number,
-        required: true,
-        default: 1, // Default quantity is 1
-        min: 1,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order', // Reference to the Order model
     },
   ],
   createdAt: {

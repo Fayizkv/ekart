@@ -13,15 +13,15 @@ router.get('/', isLoggedIn, async function (req, res, next) {
 
   const products = await productSchema.find();
 
-  res.render('index', { products, loggedIn: true, homepage: true });
+  res.render('index', { products, homepage: true });
 });
 
 router.get('/signup', (req, res) => {
-  res.render('signup');
+  res.render('signup', { loggedOut : true });
 });
 
 router.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', {loggedOut : true} );
 });
 
 //admin login
@@ -34,11 +34,11 @@ router.post('/login/admin', (req, res)=>{
       res.redirect('/admin/');
     }
     else {
-      res.render('login', { admin: true, err: "Password Incorrect" });
+      res.render('login', { admin: true, err: "Password Incorrect", loggedOut : true });
     }
   }
   else {
-    res.render('login', { admin: true, err: "Invalid Admin" });
+    res.render('login', { admin: true, err: "Invalid Admin", loggedOut : true });
   }
 
 });
