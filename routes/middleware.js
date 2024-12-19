@@ -10,7 +10,7 @@ async function adminLoggedIn(req, res, next){
       await connectDB();
       return next(); 
     } else {
-      res.render('login', { admin : true });
+      res.render('login', { admin : true, loggedOut : true });
     }
   };
 
@@ -18,7 +18,7 @@ async function verifyToken(req,res,next){
     
   const token = req.cookies.token;
   if (!token) {
-    res.render('login',{ loggedIn : false });
+    res.render('login',{ loggedOut : true });
   }
 
   try{
@@ -28,7 +28,7 @@ async function verifyToken(req,res,next){
     await connectDB();
     next();
   } catch(err){
-    res.render('login',{ loggedIn : false });
+    res.render('login',{ loggedOut : true });
   }
 }
 

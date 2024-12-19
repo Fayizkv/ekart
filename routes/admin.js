@@ -4,11 +4,46 @@ var dotenv = require('dotenv');
 
 var product = require('../models/productmodel');
 var User = require('../models/usermodel');
-var connectDB = require('./mongo')
+var Orders = require('../models/orders');
 
 //admin page 
-router.get('/', (req,res)=>{
-    res.render('admin');
+router.get('/', async (req,res)=>{
+
+    // const orders = await Orders.find();
+    // console.log(orders);
+
+
+    const salesReport = await Orders.aggregate([
+
+        { $unwind: "$products" },
+        {
+            $group: {
+                _id: "$products.product", 
+                totalSold: { $sum: "$products.quantity" }, 
+            },
+        },
+        {
+            $lookup: {
+                from: "products", 
+                localField: "_id", 
+                foreignField: "_id", 
+                as: "productDetails", 
+            },
+        },
+        {
+            $unwind: "$productDetails", 
+        },
+        {
+            $project: {
+                productName: "$productDetails.productname", 
+                totalSold: 1,
+            },
+        },
+        { $sort: { totalSold: -1 } },
+    ]);
+
+    // console.log(productSales);
+    res.render('admin', { salesReport, loggedOut : true });
 });
 
 

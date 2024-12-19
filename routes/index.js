@@ -21,7 +21,7 @@ router.get('/signup', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  res.render('login', {loggedOut : true} );
+  res.render('login', { loggedOut : true} );
 });
 
 //admin login
