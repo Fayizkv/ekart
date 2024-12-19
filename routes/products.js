@@ -3,33 +3,32 @@ var router = express.Router();
 var User = require('../models/usermodel');
 const products = require('../models/productmodel');
 const Order = require('../models/orders');
-
-
+var genBill = require('../models/createPdf');
 
 // view product details
-router.get('/view/:id', async(req,res)=>{
+router.get('/view/:id', async (req, res) => {
     var product = await products.findById(req.params.id);
-    res.render('product', { product, loggedIn : true });
+    res.render('product', { product, loggedIn: true });
 });
 
 //favorites::
-router.get('/favorites', async(req,res)=>{
+router.get('/favorites', async (req, res) => {
 
     const user = await User.findById(req.user.id).populate('favorites');
     const products = await user.favorites;
 
-    res.render('index', { products, favorites : true, loggedIn : true });
+    res.render('index', { products, favorites: true, loggedIn: true });
 
 });
 
 //cart 
-router.get('/cart', async(req,res)=>{
+router.get('/cart', async (req, res) => {
 
     const user = await User.findById(req.user.id).populate('cart.product');
     const cartItems = await user.cart;
 
 
-    res.render('cart', { cartItems, loggedIn : true});
+    res.render('cart', { cartItems, loggedIn: true });
 
 });
 
@@ -41,7 +40,7 @@ router.post('/addfavorite', async (req, res) => {
 
     if (!user.favorites) {
         user.favorites = [];
-      }
+    }
     const isFav = await user.favorites.includes(req.body.productId);
 
     if (isFav) {
@@ -69,15 +68,15 @@ router.post('/addcart', async (req, res) => {
 
     if (!user.cart) {
         user.cart = [];
-      };
+    };
 
-      const existingCartItem = user.cart.find(item => item.product && item.product.toString() === productId);
+    const existingCartItem = user.cart.find(item => item.product && item.product.toString() === productId);
 
     if (existingCartItem) {
-      // If product exists, update the quantity
-      existingCartItem.quantity += quantity;
-      console.log("Product quantity updated in cart");
-    } else{
+        // If product exists, update the quantity
+        existingCartItem.quantity += quantity;
+        console.log("Product quantity updated in cart");
+    } else {
         user.cart.push({ product: productId, quantity });
         console.log("Product added to cart successfully");
     }
@@ -86,7 +85,7 @@ router.post('/addcart', async (req, res) => {
 });
 
 //remove from cart
-router.get('/removefromcart/:productId', async(req,res)=>{
+router.get('/removefromcart/:productId', async (req, res) => {
 
     const productId = req.params.productId;
 
@@ -102,13 +101,13 @@ router.get('/removefromcart/:productId', async(req,res)=>{
 });
 
 //buy 
-router.post('/buy', async (req,res)=>{
+router.post('/buy', async (req, res) => {
 
     const product = await products.findById(req.body.productId);
-    res.render('buypage',{ product });
+    res.render('buypage', { product });
 });
 
-router.post('/purchase', async (req,res)=>{
+router.post('/purchase', async (req, res) => {
 
     const { productId, quantity, fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod } = req.body;
 
@@ -118,7 +117,7 @@ router.post('/purchase', async (req,res)=>{
         return res.status(400).send("Not enough stock available.");
     }
 
-    product.quantity -= quantity ;
+    product.quantity -= quantity;
     await product.save();
 
     const totalAmount = product.prize * req.body.quantity;
@@ -137,19 +136,24 @@ router.post('/purchase', async (req,res)=>{
     user.orders.push(newOrder._id);
     user.save();
 
+    const order = Order.findById(newOrder._id).populate('user products.product');
+
+    const billPath = genBill(order);
+    console.log(billPath);
+
 
     res.render('ordersuccess');
 });
 
-router.get('/orders', async(req, res)=>{
+router.get('/orders', async (req, res) => {
 
     var userOrders = await User.findById(req.user.id).populate({
         path: 'orders',
         populate: {
-          path: 'products.product', // Populate product details
-          model: 'Product',
+            path: 'products.product', // Populate product details
+            model: 'Product',
         },
-      });
+    });
 
     var orders = userOrders.orders;
 
