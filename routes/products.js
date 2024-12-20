@@ -8,7 +8,7 @@ var genBill = require('../models/createPdf');
 // view product details
 router.get('/view/:id', async (req, res) => {
     var product = await products.findById(req.params.id);
-    res.render('product', { product, loggedIn: true });
+    res.render('product', { product });
 });
 
 //favorites::

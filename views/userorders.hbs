@@ -1,50 +1,57 @@
-  <main class="container my-4">
-    <h1 class="text-center">Your Orders</h1>
+<main class="container my-4">
+  <h1 class="text-center">Your Orders</h1>
 
-    {{#if orders.length}}
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Order Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each orders}}
-          <tr>
-            <td>{{@index}}</td>
-            <td>
-              {{#each products}}
-                {{this.product.productname}} <!-- Assuming the product is populated -->
-              {{/each}}
-            </td>
-            <td>
-              {{#each products}}
-                {{this.quantity}}
-            </td>
-            <td> 
-                ${{this.price}}
-            </td>
-              {{/each}}
-            <td>${{this.totalAmount}}</td>
-            <td>{{this.paymentDetails.paymentStatus}}</td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-    {{else}}
-    <p class="text-center">No orders found.</p>
-    {{/if}}
+  {{#if orders.length}}
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+          <th>Order Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each orders}}
+        <tr>
+          <td>{{@index}}</td>
+          <td>
+            {{#each products}}
+              {{this.product.productname}}
+            {{/each}}
+          </td>
+          <td>
+            {{#each products}}
+              {{this.quantity}}
+            {{/each}}
+          </td>
+          <td>
+            {{#each products}}
+              ${{this.price}}
+            {{/each}}
+          </td>
+          <td>${{this.totalAmount}}</td>
+          <td>{{this.status}}</td>
+          <td>
+            {{#each products}}
+              <a href="/products/view/{{this.product._id}}" class="btn btn-info btn-sm">View Product</a>
+            {{/each}}
+            <a href="/products/getbill/{{_id}}" class="btn btn-success btn-sm">Get Bill</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{else}}
+  <p class="text-center">No orders found.</p>
+  {{/if}}
 
-    <div class="text-center mt-4">
-      <a href="/" class="btn btn-primary">Back to Home</a>
-    </div>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-primary">Back to Home</a>
+  </div>
+</main>
