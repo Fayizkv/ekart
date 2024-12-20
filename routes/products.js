@@ -136,15 +136,18 @@ router.post('/purchase', async (req, res) => {
     user.orders.push(newOrder._id);
     user.save();
 
-    const order = Order.findById(newOrder._id).populate('user products.product');
-
-    const billPath = genBill(order);
-    console.log(billPath);
+    const order = await Order.findById(newOrder._id).populate('user products.product');
+    res.render('ordersuccess', { order });
 
 
-    res.render('ordersuccess');
 });
 
+router.get('/getbill/:id', async(req,res)=>{
+    
+    const order = await Order.findById(req.params.id).populate('user products.product');
+    genBill(order,res);
+    console.log(order);
+})
 router.get('/orders', async (req, res) => {
 
     var userOrders = await User.findById(req.user.id).populate({
