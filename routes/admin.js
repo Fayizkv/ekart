@@ -49,7 +49,7 @@ router.get('/', async (req,res)=>{
 
 //admin Login
 router.get('/login', (req,res)=>{
-    res.render('login', {admin : true} );
+    res.render('login', {admin : true, loggedOut : true} );
 });
 
 //admin logout
@@ -59,7 +59,7 @@ router.get('/products', async (req,res)=>{
 
     var products = await product.find();
 
-    res.render('adminproducts', { products });
+    res.render('adminproducts', { products, loggedOut : true });
 });
 
 //admin user page
@@ -67,12 +67,12 @@ router.get('/users', async(req,res)=>{
 
     var users = await User.find();
     console.log(users);
-    res.render('adminusers', {users});
+    res.render('adminusers', {users, loggedOut : true});
 });
 
 //addproduct page
 router.get('/addproduct',(req,res)=>{
-    res.render('addproduct');
+    res.render('addproduct', {loggedOut : true});
 });
 
 //add product
@@ -107,7 +107,7 @@ router.post('/delete/:id', async(req,res)=>{
 router.get('/edit/:id', async (req,res)=>{
 
     const e_product = await product.findById(req.params.id);
-    res.render('productedit', { e_product }); 
+    res.render('productedit', { e_product, loggedOut : true }); 
 });
 
 
