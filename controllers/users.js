@@ -30,14 +30,47 @@ async function signup(req) {
     
         // Save the new user to the database
         await user.save();
+        console.log("signup success"); 
         return true;
         
       } catch (err) {
         console.log(err);
         return false;
       }
+}
+
+
+async function login(req,res){
+
+    dotenv.config();
+    const secretkey = process.env.SECRET_KEY;
+    try {
+      await connectDB();
   
+      let user = await User.findOne({ email: req.body.email });
       
-  }
+      if (user) {
   
-module.exports = { signup };
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        if (isMatch) {
+  
+          const token = jwt.sign({ id : user._id, username : user.username },
+                                    secretkey, {expiresIn: '1hr'});
+  
+          console.log("Login Success");
+          res.cookie('token', token, { httpOnly: true, secure: true }); // Optional 'secure: true' for HTTPS
+          return true;
+          
+        } else {
+          res.render('login',{err : "Incorrect Password"});
+        }
+      } else {
+        res.render('login',{err : "Invalid Email"});
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Server error');
+    }
+  
+  }
+module.exports = { signup, login };

@@ -6,10 +6,9 @@ var User = require('../models/usermodel')
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const signupFunction = require('../controllers/users');
+const userController = require('../controllers/users');
 
-dotenv.config();
-const secretkey = process.env.SECRET_KEY;
+
 
 //LOGIN 
 router.get('/login', (req,res)=>{
@@ -18,33 +17,35 @@ router.get('/login', (req,res)=>{
 
 // LOGIN
 router.post('/login', async(req,res)=>{
-  try {
-    await connectDB();
+  // try {
+  //   await connectDB();
 
-    let user = await User.findOne({ email: req.body.email });
+  //   let user = await User.findOne({ email: req.body.email });
     
-    if (user) {
+  //   if (user) {
 
-      const isMatch = await bcrypt.compare(req.body.password, user.password);
-      if (isMatch) {
+  //     const isMatch = await bcrypt.compare(req.body.password, user.password);
+  //     if (isMatch) {
 
-        const token = jwt.sign({ id : user._id, username : user.username },
-                                  secretkey, {expiresIn: '1hr'});
+  //       const token = jwt.sign({ id : user._id, username : user.username },
+  //                                 secretkey, {expiresIn: '1hr'});
 
-        console.log("Login Success");
-        res.cookie('token', token, { httpOnly: true, secure: true }); // Optional 'secure: true' for HTTPS
-        res.redirect('/');
-      } else {
-        res.render('login',{err : "Incorrect Password"});
-      }
-    } else {
-      res.render('login',{err : "Invalid Email"});
-    }
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send('Server error');
+  //       console.log("Login Success");
+  //       res.cookie('token', token, { httpOnly: true, secure: true }); // Optional 'secure: true' for HTTPS
+  //       res.redirect('/');
+  //     } else {
+  //       res.render('login',{err : "Incorrect Password"});
+  //     }
+  //   } else {
+  //     res.render('login',{err : "Invalid Email"});
+  //   }
+  // } catch (err) {
+  //   console.log(err);
+  //   return res.status(500).send('Server error');
+  // }
+  if ( await userController.login(req,res) ){
+    res.redirect('/');
   }
-
 });
 
 // LOGOUT 
@@ -57,8 +58,7 @@ router.get('/logout', (req,res)=>{
 // SIGNUP
 router.post('/signup', async (req, res) => {
 
-  if ( await signupFunction.signup(req) ) { 
-    console.log("signup success"); 
+  if ( await userController.signup(req) ) { 
     res.render('login'); }
   
   else { 
