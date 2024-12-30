@@ -4,7 +4,7 @@ var User = require('../models/usermodel');
 const products = require('../models/productmodel');
 const Order = require('../models/orders');
 var genBill = require('./createPdf');
-var connectDB = require('./mongo');
+const mongoose = require('mongoose');
 
 //view product details
 async function productView(id){
@@ -153,4 +153,87 @@ async function getOrders(id){
     return orders;
 }
 
-module.exports = { productView, favorites, cart, addFav, addCart, removeCart, buy, purchase, getBill, getOrders }
+//checkout 
+async function checkout(req){
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    const { fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod } = req.body;
+
+
+    try {
+        const user = await User.findById(req.user.id).populate('cart.product');
+
+        const newOrders = [];
+
+        for (const item of user.cart) {
+            const product = item.product;
+            
+            if (product.quantity < item.quantity) {
+                throw new Error(`Not enough stock for product: ${product.productname}`);
+            }
+            product.quantity -= item.quantity;
+            if ( product.quantity < 0 ){
+                return false;
+            }
+            await product.save({ session });
+
+            const totalAmount = product.prize * item.quantity;
+
+            const newOrder = new Order({
+                user: req.user.id,
+                products: [{
+                    product: product._id,
+                    quantity: item.quantity,
+                    price: product.prize,
+                }],
+                totalAmount,
+                shippingAddress: { fullName, addressLine1, addressLine2, city, state, postalCode, country },
+                paymentDetails: { method: paymentMethod, paymentStatus: 'Pending' }
+            });
+
+            await newOrder.save({ session });
+            user.orders.push(newOrder._id);
+        }
+        user.cart = [];
+        await user.save({ session });
+
+        await session.commitTransaction();
+        session.endSession();
+
+
+        return true
+    
+    }catch(error){
+        await session.abortTransaction();
+        session.endSession();
+        console.error(error);
+        return false
+    }
+}
+
+//edit cart
+async function updateCart(req){
+
+    const id = req.params.id;
+    const { action } = req.body;
+    const user = await User.findById(req.user.id);
+
+    const cartItem = user.cart.find(item => item.product.toString() === id);
+
+    if ( action === 'increase'){
+        cartItem.quantity += 1;
+    }
+    if ( action === 'decrease'){
+        cartItem.quantity -= 1;
+      if (cartItem.quantity <= 0) {
+        user.cart = user.cart.filter(item => item.product.toString() !== id);
+      }
+    }
+
+    await user.save();
+}
+
+
+module.exports = { productView, favorites, cart, addFav, addCart, removeCart, buy, purchase, getBill, getOrders, checkout, updateCart }

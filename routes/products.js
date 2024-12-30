@@ -62,6 +62,7 @@ router.post('/buy', async (req, res) => {
     res.render('buypage', { product });
 });
 
+//purchase page
 router.post('/purchase', async (req, res) => {
 
     var order = await productController.purchase(req);
@@ -69,13 +70,32 @@ router.post('/purchase', async (req, res) => {
 
 });
 
+//get bill
 router.get('/getbill/:id', async(req,res)=>{
     await productController.getBill(req.params.id,res);
 });
 
+//see orders
 router.get('/orders', async (req, res) => {
     var orders = await productController.getOrders(req.user.id)
     res.render('userorders', { orders });
 });
 
+//checkout from cart
+router.post('/checkout', async(req,res)=>{
+    if ( await productController.checkout(req) )
+    {
+        res.redirect('/products/cart');
+    }
+    else{
+        res.send('Purchase failed');
+    }
+});
+
+//update cart
+router.post('/updateCart/:id', async (req,res)=>{
+    await productController.updateCart(req);
+    res.redirect('/products/cart');
+
+});
 module.exports = router;
