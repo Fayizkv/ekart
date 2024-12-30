@@ -147,7 +147,8 @@ router.get('/getbill/:id', async(req,res)=>{
     const order = await Order.findById(req.params.id).populate('user products.product');
     genBill(order,res);
     console.log(order);
-})
+});
+
 router.get('/orders', async (req, res) => {
 
     var userOrders = await User.findById(req.user.id).populate({

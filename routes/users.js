@@ -6,6 +6,7 @@ var User = require('../models/usermodel')
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const signupFunction = require('../controllers/users');
 
 dotenv.config();
 const secretkey = process.env.SECRET_KEY;
@@ -55,37 +56,14 @@ router.get('/logout', (req,res)=>{
 
 // SIGNUP
 router.post('/signup', async (req, res) => {
-  
-  await connectDB();
-  const { username, email, password, firstName, lastName, phone } = req.body;
-    
-    try {
-      // Check if the user already exists
-      let user = await User.findOne({ email });
-      if (user) {
-        return res.status(400).send('User already exists');
-      }
-      
-      var hashedPw = await bcrypt.hash(password,10);
-      user = new User({
-        username,
-        email,
-        password : hashedPw,
-        firstName,
-        lastName,
-        phone
-      });
-  
-      // Save the new user to the database
-      await user.save();
-      res.redirect('/login');
-      
-    } catch (err) {
-      console.log(err);
-      res.status(500).send('Server error');
-    }
 
-    
+  if ( await signupFunction.signup(req) ) { 
+    console.log("signup success"); 
+    res.render('login'); }
+  
+  else { 
+    res.status(500).send('Server error'); 
+  } 
 });
 
 module.exports = router;
