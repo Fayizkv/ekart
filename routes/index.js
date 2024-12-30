@@ -1,10 +1,6 @@
 var express = require('express');
 var isLoggedIn = require('../controllers/middleware').verifyToken;
-var adminLoggedIn = require('../controllers/middleware').adminLoggedIn;
-var connectDB = require('./mongo');
-const productSchema = require('../models/productmodel');
 var indexController = require('../controllers/index');
-var dotenv = require('dotenv');
 var router = express.Router();
 
 /* GET home page. */
