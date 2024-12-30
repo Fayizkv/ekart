@@ -10,8 +10,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var productRouter = require('./routes/products');
 var adminRouter = require('./routes/admin');
-var adminLoggedIn = require('./routes/middleware').adminLoggedIn;
-var userLoggedIn = require('./routes/middleware').verifyToken;
+var adminLoggedIn = require('./controllers//middleware').adminLoggedIn;
+var userLoggedIn = require('./controllers//middleware').verifyToken;
 var app = express();
 
 // view engine setup

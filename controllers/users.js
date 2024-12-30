@@ -39,7 +39,7 @@ async function signup(req) {
       }
 }
 
-
+//  LOGIN
 async function login(req,res){
 
     dotenv.config();
@@ -72,5 +72,11 @@ async function login(req,res){
       res.status(500).send('Server error');
     }
   
-  }
-module.exports = { signup, login };
+}
+
+//LOGOUT
+function logout(res){
+    res.clearCookie('token');
+}
+
+module.exports = { signup, login, logout };
