@@ -1,48 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var dotenv = require('dotenv');
-
-var product = require('../models/productmodel');
-var User = require('../models/usermodel');
-var Orders = require('../models/orders');
+var adminController = require('../controllers/admin');
 
 //admin page 
 router.get('/', async (req,res)=>{
-
-    // const orders = await Orders.find();
-    // console.log(orders);
-
-
-    const salesReport = await Orders.aggregate([
-
-        { $unwind: "$products" },
-        {
-            $group: {
-                _id: "$products.product", 
-                totalSold: { $sum: "$products.quantity" }, 
-            },
-        },
-        {
-            $lookup: {
-                from: "products", 
-                localField: "_id", 
-                foreignField: "_id", 
-                as: "productDetails", 
-            },
-        },
-        {
-            $unwind: "$productDetails", 
-        },
-        {
-            $project: {
-                productName: "$productDetails.productname", 
-                totalSold: 1,
-            },
-        },
-        { $sort: { totalSold: -1 } },
-    ]);
-
-    // console.log(productSales);
+    var salesReport = await adminController.adminHome();
     res.render('admin', { salesReport, loggedOut : true });
 });
 
@@ -56,17 +18,14 @@ router.get('/login', (req,res)=>{
 
 //admin product page
 router.get('/products', async (req,res)=>{
-
-    var products = await product.find();
-
+    var products = await adminController.getProducts();
     res.render('adminproducts', { products, loggedOut : true });
 });
 
 //admin user page
 router.get('/users', async(req,res)=>{
 
-    var users = await User.find();
-    console.log(users);
+    var users = await adminController.getUsers();
     res.render('adminusers', {users, loggedOut : true});
 });
 
@@ -77,47 +36,28 @@ router.get('/addproduct',(req,res)=>{
 
 //add product
 router.post('/addproduct', async(req,res)=>{
-
-    const newProduct = await new product({
-        productname: req.body.productname,
-        description: req.body.description,
-        category: req.body.category,
-        subcategory: req.body.subcategory,
-        quantity: req.body.quantity,
-        prize: req.body.prize, 
-        seller: req.body.seller,
-        brandname: req.body.brandname,
-        image: req.body.image });
-
-        await newProduct.save();
-
-        console.log('Product added successfully');
-
+        await adminController.addProduct(req);
         res.redirect('/admin/addproduct');
 });
 
 //deleteproduct
 router.post('/delete/:id', async(req,res)=>{
-
-    await product.deleteOne({ _id : req.params.id });
+    await adminController.deleteProduct(req.params.id);
     res.redirect('/admin/products');
 })
 
 //edit page
 router.get('/edit/:id', async (req,res)=>{
 
-    const e_product = await product.findById(req.params.id);
+    const e_product = await adminController.getEdit(req.params.id);
     res.render('productedit', { e_product, loggedOut : true }); 
 });
 
 
 //edit product 
 router.post('/edit/:id', async(req,res)=>{
-
-    await product.findByIdAndUpdate( req.params.id, req.body, { new : true });
-    
+    await adminController.editProduct(req);    
     res.redirect('/admin/products');
 });
-
 
 module.exports = router;

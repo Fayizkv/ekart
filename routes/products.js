@@ -96,6 +96,5 @@ router.post('/checkout', async(req,res)=>{
 router.post('/updateCart/:id', async (req,res)=>{
     await productController.updateCart(req);
     res.redirect('/products/cart');
-
 });
 module.exports = router;
