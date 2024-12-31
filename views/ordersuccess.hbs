@@ -1,5 +1,10 @@
 
     <div class="success-container">
+        {{#if alertMessage}}
+        <script>
+        alert("{{alertMessage}}");
+        </script>
+    {{/if}}
         <h1>Order Placed Successfully!</h1>
         <p>Thank you for your purchase. Your order is being processed, and you will receive a confirmation email soon.</p>
         <a href="/products/getbill/{{order._id}}" class="btn btn-primary">Download Bill</a>

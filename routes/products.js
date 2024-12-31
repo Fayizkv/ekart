@@ -66,7 +66,7 @@ router.post('/buy', async (req, res) => {
 router.post('/purchase', async (req, res) => {
 
     var order = await productController.purchase(req);
-    res.render('ordersuccess', { order });
+    res.render('ordersuccess', { order, alertMessage : "Purchase successful" });
 
 });
 
@@ -85,7 +85,7 @@ router.get('/orders', async (req, res) => {
 router.post('/checkout', async(req,res)=>{
     if ( await productController.checkout(req) )
     {
-        res.redirect('/products/cart');
+        res.render('cart', { loggedIn : true, alertMessage : "purchase success"});
     }
     else{
         res.send('Purchase failed');
