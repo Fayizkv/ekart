@@ -3,15 +3,16 @@
 <div class="container">
   <div class="row">
     {{#if alertMessage}}
-        <script>
-        alert("{{alertMessage}}");
-        </script>
+    <script>
+      alert("{{alertMessage}}");
+    </script>
     {{/if}}
     {{#if cartItems}}
     {{#each cartItems}}
     <div class="col-md-4 col-sm-6 mb-4">
       <div class="card">
-        <img src="{{this.product.image}}" alt="{{this.product.productname}}" class="card-img-top" style="height: 200px; object-fit: cover;">
+        <img src="{{this.product.image}}" alt="{{this.product.productname}}" class="card-img-top"
+          style="height: 200px; object-fit: cover;">
         <div class="card-body">
           <h5 class="card-title">{{this.product.productname}}</h5>
           <p class="card-text">Price: ${{this.product.prize}}</p>
@@ -31,12 +32,12 @@
       </div>
     </div>
     {{/each}}
-    </div>
+  </div>
 
-    <div class="row mt-4">
-      <div class="col-md-8">
-        <form action="/products/checkout" method="POST">
-          <h2 class="mb-4">Shipping Details</h2>
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <form action="/products/checkout" method="POST">
+        <h2 class="mb-4">Shipping Details</h2>
 
         <div class="form-group">
           <label for="fullName">Full Name</label>
@@ -85,15 +86,20 @@
           </select>
         </div>
 
+        <div class="mb-3">
+          <label for="coupon" class="form-label">coupon</label>
+          <input type="text" class="form-control" id="coupon" name="coupon" placeholder="Enter your Coupon">
+        </div>
 
-          <button type="submit" class="btn btn-success mt-3">Checkout</button>
-        </form>
-      </div>
+
+        <button type="submit" class="btn btn-success mt-3">Checkout</button>
+      </form>
     </div>
   </div>
-  {{else}}
-  <p class="text-center">Your cart is empty.</p>
-  {{/if}}
+</div>
+{{else}}
+<p class="text-center">Your cart is empty.</p>
+{{/if}}
 </div>
 
 <style>

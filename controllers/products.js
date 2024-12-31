@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('../models/usermodel');
 const products = require('../models/productmodel');
 const Order = require('../models/orders');
+const Coupons = require('../models/couponmodel');
 var genBill = require('./createPdf');
 const mongoose = require('mongoose');
 
@@ -101,18 +102,37 @@ async function buy(id){
 }
 //purchase
 async function purchase(req){
-    const { productId, quantity, fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod } = req.body;
+    const { productId, quantity, fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod, coupon } = req.body;
 
     const product = await products.findById(req.body.productId);
-
+    const user = await User.findById(req.user.id);
+    
     if (product.quantity < quantity) {
         return res.status(400).send("Not enough stock available.");
     }
-
+    
     product.quantity -= quantity;
     await product.save();
+    
+    var totalAmount = product.prize * req.body.quantity;
+    var amountToPay = totalAmount;
+    
+    if ( coupon ){
 
-    const totalAmount = product.prize * req.body.quantity;
+        const coup = await Coupons.findOne({ couponcode : coupon })
+
+        if ( !coup ) { console.log("coupon code does not exist"); }
+        else if ( user.coupons.includes(coup._id)) {
+            console.log("coupon already used by user");
+        }else
+        {
+            amountToPay -= coup.discount;
+            // console.log (coup.discount);
+            user.coupons.push(coup._id);
+        }
+
+    }
+    // console.log(totalAmount, amountToPay);
 
     const newOrder = new Order({
         user: req.user.id,
@@ -124,13 +144,14 @@ async function purchase(req){
 
     await newOrder.save();
 
-    const user = await User.findById(req.user.id);
+   
     user.orders.push(newOrder._id);
     user.save();
 
     const order = await Order.findById(newOrder._id).populate('user products.product');
 
     return order;
+    return 1;
 }
 
 //getbill
@@ -159,9 +180,9 @@ async function checkout(req){
     const session = await mongoose.startSession();
     session.startTransaction();
 
-    const { fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod } = req.body;
+    const { fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod, coupon } = req.body;
 
-
+    var amountToPay = 0;
     try {
         const user = await User.findById(req.user.id).populate('cart.product');
 
@@ -180,6 +201,7 @@ async function checkout(req){
             await product.save({ session });
 
             const totalAmount = product.prize * item.quantity;
+            amountToPay += totalAmount;
 
             const newOrder = new Order({
                 user: req.user.id,
@@ -202,7 +224,25 @@ async function checkout(req){
         await session.commitTransaction();
         session.endSession();
 
+        if ( coupon ){
 
+            const coup = await Coupons.findOne({ couponcode : coupon })
+    
+            if ( !coup ) { console.log("coupon code does not exist"); }
+            else if ( user.coupons.includes(coup._id)) {
+                console.log("coupon already used by user");
+            }else
+            {
+                // console.log(amountToPay);
+                amountToPay -= coup.discount;
+                // console.log(amountToPay);
+                // console.log (coup.discount);
+                user.coupons.push(coup._id);
+            }
+    
+        }
+
+        await user.save();
         return true
     
     }catch(error){
@@ -211,6 +251,8 @@ async function checkout(req){
         console.error(error);
         return false
     }
+
+
 }
 
 //edit cart

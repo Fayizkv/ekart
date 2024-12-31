@@ -66,6 +66,12 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  coupons: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'coupons', // Reference to the coupons model
+    },
+  ],
 });
 
 module.exports = mongoose.model('User', userSchema);
