@@ -80,4 +80,17 @@ async function editProduct(req){
     await product.findByIdAndUpdate( req.params.id, req.body, { new : true });
 }
 
-module.exports = { adminHome, getProducts, getUsers, addProduct, deleteProduct, getEdit, editProduct }
+//activate user
+async function activateUser(id){
+    await User.findByIdAndUpdate(
+        id,
+        { activestatus: true },
+        { new: true }
+      );
+}
+
+//deactivate user
+async function deactivateUser(id){
+    await User.findByIdAndUpdate(id, {activestatus : false}, { new: true });
+}
+module.exports = { adminHome, getProducts, getUsers, addProduct, deleteProduct, getEdit, editProduct, activateUser, deactivateUser }

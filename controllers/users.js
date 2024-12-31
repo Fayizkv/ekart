@@ -21,6 +21,7 @@ async function signup(req) {
         var hashedPw = await bcrypt.hash(password,10);
         user = new User({
           username,
+          activestatus : true,
           email,
           password : hashedPw,
           firstName,
@@ -50,6 +51,11 @@ async function login(req,res){
       let user = await User.findOne({ email: req.body.email });
       
       if (user) {
+
+        if(!user.activestatus){
+          res.render('login',{err : "Sorry, your account has been blocked by admin"});
+          return
+        }
   
         const isMatch = await bcrypt.compare(req.body.password, user.password);
         if (isMatch) {
@@ -61,7 +67,8 @@ async function login(req,res){
           res.cookie('token', token, { httpOnly: true, secure: true }); // Optional 'secure: true' for HTTPS
           return true;
           
-        } else {
+        }
+        else {
           res.render('login',{err : "Incorrect Password"});
         }
       } else {

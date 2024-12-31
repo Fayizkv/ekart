@@ -60,4 +60,16 @@ router.post('/edit/:id', async(req,res)=>{
     res.redirect('/admin/products');
 });
 
+//activate user
+router.get('/activate/:id', async(req,res)=>{
+    adminController.activateUser(req.params.id);
+    res.redirect('/admin/users');
+});
+
+//dectivate user
+router.get('/deactivate/:id', async (req,res)=>{
+    adminController.deactivateUser(req.params.id);
+    res.redirect('/admin/users');
+})
+
 module.exports = router;
