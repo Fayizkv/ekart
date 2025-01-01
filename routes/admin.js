@@ -39,7 +39,7 @@ router.get('/addproduct',(req,res)=>{
 });
 
 //add product
-router.post('/addproduct', async(req,res)=>{
+router.post('/addproduct', adminController.upload.single('imagefile'), async(req,res)=>{
         await adminController.addProduct(req);
         res.redirect('/admin/addproduct');
 });

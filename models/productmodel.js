@@ -47,6 +47,12 @@ const productSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  images: [
+    {
+      data: Buffer, // Binary data for the image
+      contentType: String, // MIME type, e.g., 'image/jpeg', 'image/png'
+    },
+  ],
 });
 
 module.exports = mongoose.model('Product', productSchema);
