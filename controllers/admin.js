@@ -77,7 +77,6 @@ async function addProduct(req) {
     const savedProduct = await newProduct.save();
 
     if (req.file) {
-        console.log(req.file);
         savedProduct.images.push({
           data: req.file.buffer, // Binary data for each image
           contentType: req.file.mimetype, // MIME type of each uploaded image
