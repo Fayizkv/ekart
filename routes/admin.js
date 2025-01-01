@@ -15,6 +15,10 @@ router.get('/login', (req,res)=>{
 });
 
 //admin logout
+router.get('/logout', (req,res)=>{
+    adminController.logout(req);
+    res.redirect('/');
+});
 
 //admin product page
 router.get('/products', async (req,res)=>{
@@ -62,13 +66,13 @@ router.post('/edit/:id', async(req,res)=>{
 
 //activate user
 router.get('/activate/:id', async(req,res)=>{
-    adminController.activateUser(req.params.id);
+    await adminController.activateUser(req.params.id);
     res.redirect('/admin/users');
 });
 
 //dectivate user
 router.get('/deactivate/:id', async (req,res)=>{
-    adminController.deactivateUser(req.params.id);
+    await adminController.deactivateUser(req.params.id);
     res.redirect('/admin/users');
 })
 

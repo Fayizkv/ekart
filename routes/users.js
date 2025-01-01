@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const userController = require('../controllers/users');
+var isLoggedIn = require('../controllers/middleware').verifyToken;
 
 //LOGIN 
 router.get('/login', (req,res)=>{
@@ -31,4 +32,15 @@ router.post('/signup', async (req, res) => {
   } 
 });
 
+//Get details
+router.get('/details', isLoggedIn, async(req,res)=>{
+  var user = await userController.getDetails(req.user.id);
+  res.render('userdetails', { user });
+});
+
+//edit user details
+router.post('/edit', isLoggedIn, async(req,res)=>{
+  await userController.editDetails(req);
+  res.redirect('/users/details');
+})
 module.exports = router;

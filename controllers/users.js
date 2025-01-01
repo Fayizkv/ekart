@@ -86,4 +86,14 @@ function logout(res){
     res.clearCookie('token');
 }
 
-module.exports = { signup, login, logout };
+//get details
+async function getDetails(id){
+  return await User.findById(id);
+}
+
+//edit user detaisl
+async function editDetails(req){
+  await User.findByIdAndUpdate(req.user.id, req.body, { new : true});
+}
+
+module.exports = { signup, login, logout, getDetails, editDetails };

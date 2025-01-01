@@ -2,6 +2,7 @@ var dotenv = require('dotenv');
 var product = require('../models/productmodel');
 var User = require('../models/usermodel');
 var Orders = require('../models/orders');
+var noCache = require('nocache');
 
 //get home page
 async function adminHome(){
@@ -35,6 +36,12 @@ async function adminHome(){
     ]);
 
     return salesReport;
+}
+
+//logout
+function logout(req){
+    req.session.destroy();
+    noCache();
 }
 
 //get productpage
@@ -93,4 +100,4 @@ async function activateUser(id){
 async function deactivateUser(id){
     await User.findByIdAndUpdate(id, {activestatus : false}, { new: true });
 }
-module.exports = { adminHome, getProducts, getUsers, addProduct, deleteProduct, getEdit, editProduct, activateUser, deactivateUser }
+module.exports = { adminHome, getProducts, getUsers, addProduct, deleteProduct, getEdit, editProduct, activateUser, deactivateUser, logout };
