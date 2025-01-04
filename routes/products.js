@@ -59,7 +59,7 @@ router.get('/removefromcart/:productId', async (req, res) => {
 //buy 
 router.post('/buy', async (req, res) => {
     const product = await productController.buy(req.body.productId);
-    res.render('buypage', { product });
+    res.render('buypage', { product, razorpay : true, singleItem : true });
 });
 
 //purchase page
@@ -81,7 +81,7 @@ router.get('/paymentsuccess/:id', async (req,res)=>{
 router.get('/paymentfailure/:id', async (req,res)=>{
     await productController.purchasePaymentFailed(req.params.id);
     res.redirect('/');
-})
+});
 
 //get bill
 router.get('/getbill/:id', async(req,res)=>{
@@ -96,13 +96,21 @@ router.get('/orders', async (req, res) => {
 
 //checkout from cart
 router.post('/checkout', async(req,res)=>{
-    if ( await productController.checkout(req) )
-    {
-        res.render('cart', { loggedIn : true, alertMessage : "purchase success"});
+    const status =  await productController.proceedCheckout(req,res);
+    if ( !status ){
+        res.render('bulkordercod')
     }
-    else{
-        res.send('Purchase failed');
-    }
+});
+
+//checkout proceed for address
+router.get('/checkoutsuccess/:id', (req,res)=>{
+    res.render('bulkorderpaid', { transactionId : req.params.id })
+});
+
+//make cart order
+router.post('/bulkpurchase', async (req,res)=>{
+    await productController.checkout(req);
+    res.redirect('/');
 });
 
 //update cart

@@ -37,52 +37,14 @@
   <div class="row mt-4">
     <div class="col-md-8">
       <form action="/products/checkout" method="POST">
-        <h2 class="mb-4">Shipping Details</h2>
-
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" class="form-control" id="fullName" name="fullName" required>
-        </div>
-
-        <div class="form-group">
-          <label for="addressLine1">Address Line 1</label>
-          <input type="text" class="form-control" id="addressLine1" name="addressLine1" required>
-        </div>
-
-        <div class="form-group">
-          <label for="addressLine2">Address Line 2 (Optional)</label>
-          <input type="text" class="form-control" id="addressLine2" name="addressLine2">
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" required>
-          </div>
-          <div class="form-group col-md-4">
-            <label for="state">State</label>
-            <input type="text" class="form-control" id="state" name="state" required>
-          </div>
-          <div class="form-group col-md-2">
-            <label for="postalCode">Postal Code</label>
-            <input type="text" class="form-control" id="postalCode" name="postalCode" required>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="country">Country</label>
-          <input type="text" class="form-control" id="country" name="country" required>
-        </div>
-
+      
         <h2 class="mt-4">Payment Details</h2>
 
         <div class="form-group">
           <label for="paymentMethod">Payment Method</label>
           <select class="form-control" id="paymentMethod" name="paymentMethod" required>
             <option value="Cash on Delivery">Cash on Delivery</option>
-            <option value="Credit Card">Credit Card</option>
-            <option value="PayPal">PayPal</option>
-            <option value="Other">Other</option>
+            <option value="Razorpay">Razorpay</option>
           </select>
         </div>
 

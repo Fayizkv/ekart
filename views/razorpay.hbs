@@ -20,7 +20,11 @@
                 // Payment successful
                 alert(`Payment Successful. Payment ID: ${response.razorpay_payment_id}`);
                 // Redirect to success page or inform backend
+                {{#if bulk}}
+                    window.location.href = `/products/checkoutsuccess/{{orderId}}`;
+                {{else}}
                 window.location.href = `/products/paymentsuccess/{{purchaseOrder}}`;
+                {{/if}}
             },
             prefill: {
                 //name: "Customer Name", // Optional
