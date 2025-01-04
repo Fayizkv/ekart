@@ -65,10 +65,23 @@ router.post('/buy', async (req, res) => {
 //purchase page
 router.post('/purchase', async (req, res) => {
 
-    var order = await productController.purchase(req);
-    res.render('ordersuccess', { order, alertMessage : "Purchase successful" });
-
+    var orderId = await productController.purchase(req,res);
+    if(req.body.paymentMethod !== 'Razorpay' ){
+    res.render('ordersuccess', { orderId, alertMessage : "Purchase successful" }); 
+    }
 });
+
+//payment success
+router.get('/paymentsuccess/:id', async (req,res)=>{
+    await productController.purchasePaymentSuccess(req.params.id, req.user.id);
+    res.render('ordersuccess', { orderId : req.params.id, alertMessage : "Purchase successful" });
+})
+
+//payment failed
+router.get('/paymentfailure/:id', async (req,res)=>{
+    await productController.purchasePaymentFailed(req.params.id);
+    res.redirect('/');
+})
 
 //get bill
 router.get('/getbill/:id', async(req,res)=>{

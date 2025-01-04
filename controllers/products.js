@@ -6,6 +6,8 @@ const Order = require('../models/orders');
 const Coupons = require('../models/couponmodel');
 var genBill = require('./createPdf');
 const mongoose = require('mongoose');
+const Razorpay = require('razorpay');
+var dotenv = require('dotenv');
 
 //view product details
 async function productView(id){
@@ -100,8 +102,33 @@ async function buy(id){
     const product = await products.findById(id);
     return product;
 }
+
+//razorpay
+async function makePayment(amountToPay, orderId){
+    dotenv.config();
+    const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY,
+        key_secret: process.env.KEY_SECRET
+    });
+
+    try{
+        const options = {
+            amount: amountToPay * 100,
+            currency: 'INR',
+            receipt: "order"+orderId
+        };
+
+        const razorPayOrder = await razorpay.orders.create(options);
+        // console.log("Razorpay Order Created:", razorPayOrder);
+        return razorPayOrder;
+    }catch(error){
+        console.log("error making payment", error);
+        throw error;
+    }
+
+}
 //purchase
-async function purchase(req){
+async function purchase(req,res){
     const { productId, quantity, fullName, addressLine1, addressLine2, city, state, postalCode, country, paymentMethod, coupon } = req.body;
 
     const product = await products.findById(req.body.productId);
@@ -127,13 +154,13 @@ async function purchase(req){
         }else
         {
             amountToPay -= coup.discount;
-            // console.log (coup.discount);
             user.coupons.push(coup._id);
         }
 
-    }
-    // console.log(totalAmount, amountToPay);
+    }  
 
+    
+    
     const newOrder = new Order({
         user: req.user.id,
         products: [{ product: productId, quantity: quantity, price: product.prize }],
@@ -141,17 +168,40 @@ async function purchase(req){
         shippingAddress: { fullName, addressLine1, addressLine2, city, state, postalCode, country },
         paymentDetails: { method: paymentMethod, paymentStatus: 'Pending' }
     });
+    
+    if ( paymentMethod === 'Razorpay'){
+    const razorpayOrder = await makePayment(amountToPay, newOrder._id);
+    newOrder.paymentDetails.transactionId = ""+razorpayOrder.id;
 
     await newOrder.save();
 
+    res.render('razorpay', {
+        orderId: razorpayOrder.id,
+        amount: amountToPay * 100,
+        currency: 'INR',
+        purchaseOrder: newOrder._id,
+    });
+    }
+    else{
+    await newOrder.save();
    
     user.orders.push(newOrder._id);
     user.save();
+    
+    return newOrder._id;
+    }
+}
 
-    const order = await Order.findById(newOrder._id).populate('user products.product');
+//purchase payment success
+async function purchasePaymentSuccess(id, userId){
+    var user = await User.findById(userId);
+    user.orders.push(id);
+    await user.save();
+}
 
-    return order;
-    return 1;
+//purchase payment failure
+async function purchasePaymentFailed(id){
+    await Order.deleteById(id);
 }
 
 //getbill
@@ -278,4 +328,4 @@ async function updateCart(req){
 }
 
 
-module.exports = { productView, favorites, cart, addFav, addCart, removeCart, buy, purchase, getBill, getOrders, checkout, updateCart }
+module.exports = { productView, favorites, cart, addFav, addCart, removeCart, buy, purchase, getBill, getOrders, checkout, updateCart, purchasePaymentSuccess, purchasePaymentFailed }

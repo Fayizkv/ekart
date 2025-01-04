@@ -1,0 +1,44 @@
+<body>
+    <div class="container">
+        <h2>Complete Your Payment</h2>
+        <p>Amount to Pay: ₹{{amount}}</p>
+        <button id="payNow">Pay Now</button>
+    </div>
+
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById("payNow").addEventListener("click", function () {
+        const options = {
+            key: "rzp_test_Xe9MwXIQJgAJpt", // Replace with your Razorpay Key ID
+            amount: {{amount}}, // Amount in paise
+            currency: "{{currency}}",
+            name: "E kart",
+            description: "Order Payment",
+            order_id: "{{orderId}}", // Order ID from Razorpay
+            handler: function (response) {
+                // Payment successful
+                alert(`Payment Successful. Payment ID: ${response.razorpay_payment_id}`);
+                // Redirect to success page or inform backend
+                window.location.href = `/products/paymentsuccess/{{purchaseOrder}}`;
+            },
+            prefill: {
+                //name: "Customer Name", // Optional
+                //email: "customer@example.com", // Optional
+                //contact: "9999999999", // Optional
+            },
+            modal: {
+                ondismiss: function () {
+                    // Handle case where payment modal is closed without completing payment
+                    alert("Payment was not completed. Please try again.");
+                    // Optionally, redirect or take further action
+                    window.location.href = "/products/paymentfailure/{{purchaseOrder}}";
+                },
+            },
+        };
+
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+    });
+</script>
+</body>
