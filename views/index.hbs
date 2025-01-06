@@ -1,55 +1,64 @@
 <div class="container my-5">
     {{#if favorites}}
-    <h1 class="text-center mb-4">Favorites</h1>
+    {{!-- <h1 class="text-center mb-4 text-primary display-4 fw-bold" style="letter-spacing: 2px;">Favorites</h1> --}}
     {{/if}}
     {{#if homepage}}
-    <h1 class="text-center mb-4">Our Featured Products</h1>
+    {{!-- <h1 class="text-center mb-4 text-success display-4 fw-bold" style="letter-spacing: 2px;">Our Featured Products</h1> --}}
     {{/if}}
     {{#if alertMessage}}
         <script>
         alert("{{alertMessage}}");
         </script>
     {{/if}}
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         {{#each products}}
         <div class="col">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 border-0 shadow-lg">
                 <!-- Product Image -->
-                <img src="{{this.image}}" class="card-img-top" alt="{{this.name}}"
-                    style="height: 200px; object-fit: cover;">
+                <div class="position-relative">
+                    <img src="{{this.image}}" class="card-img-top" alt="{{this.name}}" 
+                        style="height: 250px; object-fit: cover; border-radius: 10px 10px 0 0;">
+                    <span class="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 small fw-bold">
+                        ${{this.prize}}
+                    </span>
+                </div>
 
                 <!-- Product Content -->
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">
-                        <a href="/products/view/{{this._id}}" class="text-decoration-none text-dark">{{this.productname}}</a>
+                    <h5 class="card-title text-center mb-3">
+                        <a href="/products/view/{{this._id}}" class="text-decoration-none text-dark fw-bold">
+                            {{this.productname}}
+                        </a>
                     </h5>
 
-                    <p class="card-text">{{this.description}}</p>
-                    <p class="fw-bold">Price: ${{this.prize}}</p>
+                    <p class="card-text text-muted small text-center">{{this.description}}</p>
 
-                    <!-- Aligned Buttons -->
+                    <!-- Buttons -->
                     <div class="mt-auto">
-                        <div class="d-flex justify-content-around gap-2">
+                        <!-- Favorite and Add to Cart Buttons in a Single Row -->
+                        <div class="d-flex">
                             <!-- Favorite Button -->
-                            <form action="/products/addfavorite" method="POST" style="margin: 0;">
+                            <form action="/products/addfavorite" method="POST" style="margin: 0; flex-grow: 1;">
                                 <input type="hidden" name="productId" value="{{this._id}}">
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <button type="submit" class="btn btn-danger btn-sm w-100 rounded-0">
                                     ❤️ Favorite
                                 </button>
                             </form>
 
                             <!-- Add to Cart Button -->
-                            <form action="/products/addcart" method="POST" style="margin: 0;">
+                            <form action="/products/addcart" method="POST" style="margin: 0; flex-grow: 1;">
                                 <input type="hidden" name="productId" value="{{this._id}}">
-                                <button type="submit" class="btn btn-outline-success btn-sm">
+                                <button type="submit" class="btn btn-outline-success btn-sm w-100 rounded-0">
                                     Add to Cart
                                 </button>
                             </form>
+                        </div>
 
-                            <!-- Buy Now Button -->
+                        <!-- Buy Now Button -->
+                        <div class="mt-2">
                             <form action="/products/buy" method="POST" style="margin: 0;">
                                 <input type="hidden" name="productId" value="{{this._id}}">
-                                <button type="submit" class="btn btn-primary btn-sm">
+                                <button type="submit" class="btn btn-primary btn-sm w-100 rounded-0">
                                     Buy Now
                                 </button>
                             </form>
