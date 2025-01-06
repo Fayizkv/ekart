@@ -1,4 +1,4 @@
-<h1 class="text-center my-5">Your Cart</h1>
+{{!-- <h1 class="text-center my-5 text-primary display-4 fw-bold">Your Cart</h1> --}}
 
 <div class="container">
   <div class="row">
@@ -10,24 +10,24 @@
     {{#if cartItems}}
     {{#each cartItems}}
     <div class="col-md-4 col-sm-6 mb-4">
-      <div class="card">
+      <div class="card shadow-sm border-0">
         <img src="{{this.product.image}}" alt="{{this.product.productname}}" class="card-img-top"
-          style="height: 200px; object-fit: cover;">
+          style="height: 250px; object-fit: cover; border-radius: 10px;">
         <div class="card-body">
-          <h5 class="card-title">{{this.product.productname}}</h5>
-          <p class="card-text">Price: ${{this.product.prize}}</p>
-          <div class="d-flex align-items-center mb-3">
-            <form action="/products/updatecart/{{this.product._id}}" method="POST" class="mr-2">
+          <h5 class="card-title text-center">{{this.product.productname}}</h5>
+          <p class="card-text text-center">Price: ${{this.product.prize}}</p>
+          <div class="d-flex justify-content-center align-items-center mb-3">
+            <form action="/products/updatecart/{{this.product._id}}" method="POST" style="margin: 0 5px;">
               <input type="hidden" name="action" value="decrease">
-              <button type="submit" class="btn btn-outline-secondary btn-sm">-</button>
+              <button type="submit" class="btn btn-outline-secondary btn-sm rounded-0">-</button>
             </form>
-            <span>{{this.quantity}}</span>
-            <form action="/products/updatecart/{{this.product._id}}" method="POST" class="ml-2">
+            <span class="mx-2">{{this.quantity}}</span>
+            <form action="/products/updatecart/{{this.product._id}}" method="POST" style="margin: 0 5px;">
               <input type="hidden" name="action" value="increase">
-              <button type="submit" class="btn btn-outline-secondary btn-sm">+</button>
+              <button type="submit" class="btn btn-outline-secondary btn-sm rounded-0">+</button>
             </form>
           </div>
-          <a href="/products/removefromcart/{{this.product._id}}" class="btn btn-danger">Remove</a>
+          <a href="/products/removefromcart/{{this.product._id}}" class="btn btn-danger w-100 rounded-0">Remove</a>
         </div>
       </div>
     </div>
@@ -38,9 +38,9 @@
     <div class="col-md-8">
       <form action="/products/checkout" method="POST">
       
-        <h2 class="mt-4">Payment Details</h2>
+        <h2 class="mt-4 text-success">Payment Details</h2>
 
-        <div class="form-group">
+        <div class="form-group mb-3">
           <label for="paymentMethod">Payment Method</label>
           <select class="form-control" id="paymentMethod" name="paymentMethod" required>
             <option value="Cash on Delivery">Cash on Delivery</option>
@@ -49,16 +49,16 @@
         </div>
 
         <div class="mb-3">
-          <label for="coupon" class="form-label">coupon</label>
+          <label for="coupon" class="form-label">Coupon</label>
           <input type="text" class="form-control" id="coupon" name="coupon" placeholder="Enter your Coupon">
         </div>
 
-
-        <button type="submit" class="btn btn-success mt-3">Checkout</button>
+        <button type="submit" class="btn btn-success mt-3 w-100 rounded-0">Checkout</button>
       </form>
     </div>
   </div>
 </div>
+
 {{else}}
 <p class="text-center">Your cart is empty.</p>
 {{/if}}
@@ -66,13 +66,12 @@
 
 <style>
   .card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
   .card-img-top {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-radius: 10px 10px 0 0;
   }
 
   .card-body {
@@ -81,6 +80,7 @@
 
   .btn {
     width: 100%;
+    border-radius: 0;
   }
 
   .d-flex {
@@ -92,11 +92,20 @@
     padding: 0.25rem 0.5rem;
   }
 
-  .mr-2 {
-    margin-right: 0.5rem;
+  .btn-outline-secondary {
+    border-radius: 0;
   }
 
-  .ml-2 {
-    margin-left: 0.5rem;
+  .btn-danger {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .btn-success {
+    border-radius: 0;
   }
 </style>

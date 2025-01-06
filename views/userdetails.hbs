@@ -1,43 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #0056b3 !important;
+        }
+
+        /* Content Area */
+        .content-container {
+            margin-top: 40px; /* Reduced top margin */
+            margin-left: 100px;
+            margin-right: 100px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-bottom: 30px;
+            background-color: #212121;
+            color: white;
+            width: 100%; /* Ensure full width within container */
+            max-width: 600px; /* Set max-width for card */
+        }
+
+        .card-header {
+            background-color: #333;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 15px;
+        }
+
+        .card-body {
+            background-color: #212121;
+            padding: 25px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            background-color: #444;
+            border-color: #007bff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 20px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            font-size: 16px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 900px; /* Adjust container width */
+            padding: 0 15px; /* Ensure equal padding on both sides */
+        }
+
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
+
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>User Details</h1>
-    </header>
-    <main class="container my-5">
-        {{#if user}}
-            <div class="card shadow">
-                <div class="card-header bg-secondary text-white">
+    <!-- Main Content -->
+    <div class="content-container">
+        <main class="container my-5">
+            {{#if user}}
+            <div class="card shadow-lg">
+                <div class="card-header">
                     <h2 class="mb-0">User Information</h2>
                 </div>
                 <div class="card-body">
                     <form action="/users/edit/" method="POST">
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="firstName" class="form-label"><strong>First Name:</strong></label>
-                            <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" class="form-control" required>
+                            <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" class="form-control"
+                                required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="lastName" class="form-label"><strong>Last Name:</strong></label>
-                            <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" class="form-control" required>
+                            <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" class="form-control"
+                                required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="username" class="form-label"><strong>Username:</strong></label>
-                            <input type="text" id="username" name="username" value="{{user.username}}" class="form-control" required>
+                            <input type="text" id="username" name="username" value="{{user.username}}" class="form-control"
+                                required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="email" class="form-label"><strong>Email:</strong></label>
                             <input type="email" id="email" name="email" value="{{user.email}}" class="form-control" required>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="phone" class="form-label"><strong>Phone:</strong></label>
                             <input type="tel" id="phone" name="phone" value="{{user.phone}}" class="form-control" required>
                         </div>
@@ -46,14 +160,15 @@
                     </form>
                 </div>
             </div>
-        {{else}}
-            <div class="alert alert-warning text-center" role="alert">
+            {{else}}
+            <div class="alert alert-warning text-center mt-4" role="alert">
                 No user details available.
             </div>
-        {{/if}}
-    </main>
-    <footer class="text-center py-3 bg-light">
-        <p class="mb-0">&copy; 2024 EcoCart</p>
-    </footer>
+            {{/if}}
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -179,6 +179,7 @@ async function purchase(req, res) {
             amount: amountToPay * 100,
             currency: 'INR',
             purchaseOrder: newOrder._id,
+            amountToPay: amountToPay
         });
     }
     else {
@@ -347,7 +348,8 @@ async function proceedCheckout(req, res) {
                 orderId: razorpayOrder.id,
                 amount: amountToPay * 100,
                 currency: 'INR',
-                bulk: true
+                bulk: true,
+                amountToPay: amountToPay
             });
         }
         else {
