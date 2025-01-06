@@ -1,26 +1,28 @@
-
-<div class="container mt-5">
-  <h2 class="text-center">Login</h2>
-  {{#if admin}}
-  <form action="/login/admin" method="POST">
-  {{else}}
-  <form action="/users/login" method="POST">
-  {{/if}}
-    <div class="mb-3">
-    {{#if err}}
-    <div class="alert alert-danger">{{err}}</div>
-    {{/if}}
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" required>
+<div class="d-flex justify-content-center" style="height: 90vh;">
+  <div class="card shadow-lg align-self-center" style="width: 400px; border-radius: 10px;">
+    <div class="card-body">
+      <h2 class="text-center mb-4">Login</h2>
+      {{#if admin}}
+      <form action="/login/admin" method="POST">
+      {{else}}
+      <form action="/users/login" method="POST">
+      {{/if}}
+        {{#if err}}
+        <div class="alert alert-danger">{{err}}</div>
+        {{/if}}
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+      <p class="mt-3 text-center">Don't have an account? <a href="/signup">Sign up</a></p>
     </div>
-    
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" name="password" required>
-    </div>
-    
-    <button type="submit" class="btn btn-primary w-100">Login</button>
-  </form>
-  <p class="mt-3 text-center">Don't have an account? <a href="/signup">Sign up</a></p>
+  </div>
 </div>
-
