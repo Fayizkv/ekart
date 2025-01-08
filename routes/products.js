@@ -4,8 +4,6 @@ var User = require('../models/usermodel');
 const Order = require('../models/orders');
 var productController = require('../controllers/products')
 
-
-
 // view product details
 router.get('/view/:id', async (req, res) => {
     var product = await productController.productView(req.params.id);
@@ -114,8 +112,10 @@ router.post('/bulkpurchase', async (req,res)=>{
 });
 
 //update cart
-router.post('/updateCart/:id', async (req,res)=>{
-    await productController.updateCart(req);
-    res.redirect('/products/cart');
+router.post('/updateCart/', async (req,res)=>{
+    var status = await productController.updateCart(req.user.id, req.body.action, req.body.id);
+    if ( status != false ){
+        res.json({success : true, quantity : status})
+    }
 });
 module.exports = router;

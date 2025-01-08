@@ -17,15 +17,12 @@
           <h5 class="card-title text-center">{{this.product.productname}}</h5>
           <p class="card-text text-center">Price: ${{this.product.prize}}</p>
           <div class="d-flex justify-content-center align-items-center mb-3">
-            <form action="/products/updatecart/{{this.product._id}}" method="POST" style="margin: 0 5px;">
-              <input type="hidden" name="action" value="decrease">
-              <button type="submit" class="btn btn-outline-secondary btn-sm rounded-0">-</button>
-            </form>
-            <span class="mx-2">{{this.quantity}}</span>
-            <form action="/products/updatecart/{{this.product._id}}" method="POST" style="margin: 0 5px;">
-              <input type="hidden" name="action" value="increase">
-              <button type="submit" class="btn btn-outline-secondary btn-sm rounded-0">+</button>
-            </form>
+
+            <text id="Outofstock-{{this.product._id}}"></text>
+            <button onclick="updateCart('decrease', '{{this.product._id}}')" class="btn btn-outline-secondary btn-sm rounded-0">-</button>
+            <span class="mx-2" id = "quantity-{{this.product._id}}">{{this.quantity}}</span>
+            <button onclick="updateCart('increase', '{{this.product._id}}')" class="btn btn-outline-secondary btn-sm rounded-0">+</button>
+
           </div>
           <a href="/products/removefromcart/{{this.product._id}}" class="btn btn-danger w-100 rounded-0">Remove</a>
         </div>
@@ -64,6 +61,27 @@
 {{/if}}
 </div>
 
+<script>
+ 
+function updateCart(action, id) {
+  
+  axios.post('/products/updateCart', { action : action , id : id})
+    .then(function (response) {
+      if ( response.data.success){
+        document.getElementById('quantity-' + id).innerHTML = response.data.quantity;
+      }
+      else
+      {
+        document.getElementById('Outofstock').innerHTML = "OUT OF STOCK";
+      }
+
+    })
+    .catch(function (error) {
+        alert('An error occurred while updating the cart.');
+    });
+}
+
+</script>
 <style>
   .card {
     border-radius: 10px;

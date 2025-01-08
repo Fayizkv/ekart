@@ -363,11 +363,9 @@ async function proceedCheckout(req, res) {
 
 }
 //edit cart
-async function updateCart(req) {
+async function updateCart(userId, action, id) {
 
-    const id = req.params.id;
-    const { action } = req.body;
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(userId);
 
     const cartItem = user.cart.find(item => item.product.toString() === id);
 
@@ -375,6 +373,7 @@ async function updateCart(req) {
         cartItem.quantity += 1;
     }
     if (action === 'decrease') {
+        if ( cartItem.quantity == 1) return false;
         cartItem.quantity -= 1;
         if (cartItem.quantity <= 0) {
             user.cart = user.cart.filter(item => item.product.toString() !== id);
@@ -382,6 +381,7 @@ async function updateCart(req) {
     }
 
     await user.save();
+    return cartItem.quantity
 }
 
 
