@@ -25,25 +25,17 @@ router.get('/cart', async (req, res) => {
 
 //Add or remove from fav
 router.post('/addfavorite', async (req, res) => {
-
-    await productController.addFav(req);
-    
-    if ( req.get('Referer').includes('favorites')){
-    res.redirect('/products/favorites');
-    }
-    else
+    var fav = await productController.addFav(req.user.id, req.body.product_id);
+    if( !fav )
     {
-        res.redirect('/');
+        res.json({notfav : true })
     }
   
 });
 
 //ADD TO CART
 router.post('/addcart', async (req, res) => {
-
-    await productController.addCart(req);
-    res.redirect('/');
-    
+    await productController.addCart(req.user.id,req.body.product_id);  
 });
 
 //remove from cart

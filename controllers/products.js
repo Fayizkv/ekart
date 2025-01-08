@@ -35,36 +35,37 @@ async function cart(id) {
 }
 
 //add remove from fav
-async function addFav(req) {
-    const user = await User.findById(req.user.id);
+async function addFav(id, productId) {
+    const user = await User.findById(id);
 
     if (!user.favorites) {
         user.favorites = [];
     }
-    const isFav = await user.favorites.includes(req.body.productId);
+    const isFav = await user.favorites.includes(productId);
 
     if (isFav) {
         user.favorites = await user.favorites.filter(
-            (id) => id.toString() !== req.body.productId
+            (id) => id.toString() !== productId
         );
         console.log("Product removed from favorites succesfully");
         await user.save();
+        return false;
 
     }
     else {
-        await user.favorites.push(req.body.productId);
+        await user.favorites.push(productId);
         console.log("Product added to favorites succesfully");
         await user.save();
+        return true;
     }
 
 }
 
 //add to cart
-async function addCart(req) {
+async function addCart(id, productId) {
 
-    const user = await User.findById(req.user.id);
-    const productId = req.body.productId;
-    const quantity = req.body.quantity || 1;
+    const user = await User.findById(id);
+    const quantity = 1;
 
     if (!user.cart) {
         user.cart = [];

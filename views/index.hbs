@@ -5,11 +5,6 @@
     {{#if homepage}}
     {{!-- <h1 class="text-center mb-4 text-success display-4 fw-bold" style="letter-spacing: 2px;">Our Featured Products</h1> --}}
     {{/if}}
-    {{#if alertMessage}}
-        <script>
-        alert("{{alertMessage}}");
-        </script>
-    {{/if}}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         {{#each products}}
         <div class="col">
@@ -38,20 +33,11 @@
                         <!-- Favorite and Add to Cart Buttons in a Single Row -->
                         <div class="d-flex">
                             <!-- Favorite Button -->
-                            <form action="/products/addfavorite" method="POST" style="margin: 0; flex-grow: 1;">
-                                <input type="hidden" name="productId" value="{{this._id}}">
-                                <button type="submit" class="btn btn-danger btn-sm w-100 rounded-0">
-                                    ❤️ Favorite
-                                </button>
-                            </form>
-
+                            <button onClick="addfav('{{this.id}}')" class="btn btn-danger btn-sm w-100 rounded-0" style="margin: 0; flex-grow: 1;">❤️ Favorite</button>
+                    
+                            <button onClick="addcart('{{this.id}}')" class="btn btn-outline-success btn-sm w-100 rounded-0">Add to Cart</button>
                             <!-- Add to Cart Button -->
-                            <form action="/products/addcart" method="POST" style="margin: 0; flex-grow: 1;">
-                                <input type="hidden" name="productId" value="{{this._id}}">
-                                <button type="submit" class="btn btn-outline-success btn-sm w-100 rounded-0">
-                                    Add to Cart
-                                </button>
-                            </form>
+        
                         </div>
 
                         <!-- Buy Now Button -->
@@ -70,3 +56,23 @@
         {{/each}}
     </div>
 </div>
+
+<script>
+    function addfav(product_id){
+         axios.post('/products/addfavorite',{ product_id : product_id }).then( function (response){
+            //remove the product if favorites is true
+         }).catch(function (error)
+         {
+            alert('error adding to cart');
+         })
+    }
+
+    function addcart(product_id){
+
+        axios.post('/products/addcart',{ product_id : product_id}).then( function(response){
+            alert("product added to cart succesfully");
+        }).catch(function (error){
+            alert("error adding to cart");
+        })
+    }
+</script>
