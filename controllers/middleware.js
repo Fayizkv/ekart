@@ -18,6 +18,7 @@ async function verifyToken(req,res,next){
     
   const token = req.cookies.token;
   if (!token) {
+    console.log('no token');
     res.render('login',{ loggedOut : true });
   }
 
