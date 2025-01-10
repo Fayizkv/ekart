@@ -3,7 +3,7 @@
 
   {{#if orders.length}}
   <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" id="userOrders">
       <thead>
         <tr>
           <th>#</th>
@@ -55,3 +55,7 @@
     <a href="/" class="btn btn-primary">Back to Home</a>
   </div>
 </main>
+
+<script>
+    $('#userOrders').DataTable();
+</script>

@@ -29,7 +29,7 @@
             <a href="/admin/logout" class="btn btn-secondary mx-2">logout</a>
         </div>
         
-        <table class="table table-striped table-bordered">
+        <table class="table table-striped table-bordered" id ="usersTable">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
@@ -87,4 +87,7 @@
         </table>
     </div>
 </body>
+<script>
+    $('#usersTable').DataTable();
+</script>
 </html>
